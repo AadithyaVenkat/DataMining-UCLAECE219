@@ -1,0 +1,468 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\title{Project 2 : Clustering}
+\author{\\Aadithya Venkatanarayanan 404946465\\Narendran Raghavan 404945767\\Srividhya Balasubramanian 205023825}
+\date{11th February 2018}
+\usepackage{geometry}
+\geometry{left =1in,right=1in,top=1in,bottom=1in}
+%%\newcommand \tab[1][1cm]{\hspace*{#1}}
+%%\usepackage{xltxtra}
+\usepackage{graphicx}
+\usepackage{ragged2e}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{amsmath}
+%\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{subfig}
+\begin{document}
+\maketitle
+\section{Objective}
+Clustering is the grouping of a particular set of objects based on their characteristics, aggregating them according to their similarities. This methodology partitions the data implementing a specific join algorithm, most suitable for the desired information analysis. \\
+There are several different ways to implement this partitioning, based on distinct models. The most important ones are: Centralized,Distributed,Connectivity,Group,Graph,Density. The most common clustering method is the centroid-based.In this type of grouping method, every cluster is referenced by a vector of values. Each object is part of the cluster whose value difference is minimal, compared to other clusters.Under centroid based clustering, the popular, notable approach is k-means clustering. It aims to partition n observations into k clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster.\\
+The goal of this project is to represent the data in an efficient way (i.e) cluster them and produce reasonable results. We also try different preprocess methods to analyze whether there is any increase in performance of the clustering. \\
+\section{Question 1}
+TFIDF, short for term frequency–inverse document frequency, is a numerical statistic that is intended to reflect how important a word is to a document in a collection or corpus. It is often used as a weighting factor in searches of information retrieval, text mining,user modeling and to determine the importance of a word in the document.The stop words are those that occur too frequent in the document or very rarely and hence are dropped out of the vocabulary. They are generated from the list provided by scikit-learn package. Terms that occur in less than three documents (min\_df=3) were removed. Hence this type of representation that does not include too much irrelevant information. TFxIDF vector representation is created using the following definition: 
+$$ TFxIDF(t,d) = tf(t,d) * idf (t) $$ 
+where tf(t,d) represents the frequency of term t in document d.\\
+
+\textbf Output: \\
+Dimensions of Numerical feature vector for training data: (7882, 18469)\\
+Number of terms Extracted for training data: 18469\\
+Dimensions of TF-IDF vector(7882, 18469) \\
+\section{Question 2a}
+We apply K-means clustering with k = 2 using the TF-IDF data.In statistics, a contingency table is a type of table in a matrix format that displays the (multivariate) frequency distribution of the variables. It is often used to record and analyze the relation between two or more categorical variables.It is also referred to as cross tabulation or cross tab. Now the difference is that Confusion Matrix is used to evaluate the performance of a classifier, and it tells how accurate a classifier is in making predictions about classification, and contingency table is used to evaluate association rules.\\
+
+\textbf{Output}\\
+Contingency Matrix: \\
+$$ M = \left( \begin{smallmatrix} 1317&2586\\ 3932&47 \end{smallmatrix} \right) $$
+%$$[[1320 \quad 2583] $$ \\
+%$$ [3947 \quad   32]] $$\\
+\section{Question 2b}
+In order to make a concrete comparison of different clustering results, there are various measures of purity for a given partition of the data points with respect to the ground truth. The measures we examine in this project are the homogeneity score, the completeness score, the V-measure, the adjusted Rand score and the adjusted mutual info score.\\
+\begin{itemize}
+	\item  Homogeneity is a measure of how "pure" the clusters are. If each cluster contains only data points from a single class, the homogeneity is satisfied\\
+	\item On the other hand, a clustering result satisfies completeness if all data points of a class are assigned to the same cluster. Both of these scores span between 0 and 1; where 1 stands for perfect clustering\\
+	\item The V-measure is then defined to be the harmonic average of homogeneity score and completeness score.
+	\item The adjusted Rand Index is similar to accuracy measure, which computes similarity between the clustering labels and ground truth labels. This method counts all pairs of points that both fall either in the same cluster and the same class or in different clusters and different classes\\
+	\item Finally, the adjusted mutual information score measures the mutual information between the cluster label distribution and the ground truth label distributions.
+\end{itemize}
+
+\textbf{Output}\\
+Homogeneity: 0.426 \\
+Completeness: 0.464 \\
+V-measure: 0.444 \\
+Adjusted Rand-Index: 0.432 \\
+Adjusted Mutual-Index: 0.426 \\
+\section{Question 3a}
+High dimensional sparse TF-IDF vectors do not yield a good clustering result because in a high-dimensional space, the Euclidean distance is not a good metric anymore.Also K-means-clustering becomes inefficient 1.when the clusters are not round shaped which will result in inaccurate identification of clusters properly 2.when the clusters have unequal variances.So, we use LSI and NMF for dimensionality reduction.We use Latent Semantic Indexing (LSI) to minimize mean square residual between original data and reconstruction from its low dimensional approximation. In addition to LSI, the dimensionality is reduced through Non-Negative Matrix Factorization (NMF) and thus the reduced form is used.\\
+
+\textbf{Output:}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=90mm]{download.png}
+	\caption{Top 1000 Principal components}
+\end{figure}
+
+The different metric values that we obtained for various r values are as follows. We have tabulated SVD Truncated Data for various R:\\
+
+\begin{center}
+	\begin{tabular}{ | m{1cm} | m{3cm}| m{2cm} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | } 
+		\hline
+		r& Contingency matrix & Homogeneity& Completeness& V-Measure& Adjusted Rand-Index& Adjusted Mutual Index \\ 
+		\hline
+		1 & $$ M = \left( \begin{smallmatrix} 1690&2213\\ 2856&1123 \end{smallmatrix} \right) $$ & 0.061& 0.062& 0.061& 0.082& 0.061 \\ 
+		\hline
+		2 & $$ M = \left( \begin{smallmatrix} 2619&1284\\ 59&3920 \end{smallmatrix} \right) $$ & 0.416& 0.450& 0.432& 0.435& 0.416 \\ 
+		\hline
+		3 & $$ M = \left( \begin{smallmatrix} 1316&2587\\ 3922&57 \end{smallmatrix} \right) $$ & 0.409& 0.445& 0.426& 0.425& 0.409\\
+		\hline
+		5& $$ M = \left( \begin{smallmatrix} 1447&2456\\ 3956&23 \end{smallmatrix} \right) $$ & 0.401& 0.447& 0.423& 0.393& 0.401\\
+		\hline
+		10 & $$ M = \left( \begin{smallmatrix} 2566&1337\\ 38&3941 \end{smallmatrix} \right) $$ & 0.417& 0.455& 0.435& 0.424& 0.417\\
+		\hline
+		20 & $$ M = \left( \begin{smallmatrix} 3899&4\\ 2690&1289 \end{smallmatrix} \right) $$ & 0.179& 0.279& 0.218& 0.100& 0.179\\
+		\hline
+		\textbf{50} & $$ M = \left( \begin{smallmatrix} 2559&1344\\ 34&3945 \end{smallmatrix} \right) $$ & 0.418& 0.457& 0.437& 0.423& 0.418\\
+		\hline
+		100 & $$ M = \left( \begin{smallmatrix} 9&3894\\ 1034&2945 \end{smallmatrix} \right) $$ & 0.135& 0.239& 0.173& 0.063& 0.135\\
+		\hline
+		300 & $$ M = \left( \begin{smallmatrix} 2499&1404\\ 29&3950 \end{smallmatrix} \right) $$ & 0.407& 0.450& 0.427& 0.405& 0.407\\
+		\hline
+	\end{tabular}
+\end{center}
+\vspace{5cm}
+
+SVD Truncated Data for various R:\\
+\begin{figure}[h]
+	\centering
+	\subfloat[Homogeneity Score]{{\includegraphics[width=7cm]{h1.png} }}%
+	\qquad
+	\subfloat[Completeness]{{\includegraphics[width=7cm]{c1.png} }}%
+	
+	\centering
+	\subfloat[V-Measure score]{{\includegraphics[width=7cm]{v1.png} }}%
+	\qquad
+	\subfloat[Adjusted Randomised Score index]{{\includegraphics[width=7cm]{r1.png} }}%
+	
+	\centering
+	\subfloat[Adjusted mutual Score index]{{\includegraphics[width=7cm]{m1.png} }}%
+\end{figure}
+\vspace{5cm}
+
+The different metric values that we obtained for various r values are as follows. We have tabulated NMF Truncated Data for various R:\\
+
+\begin{center}
+	\begin{tabular}{ | m{1cm} | m{3cm}| m{2cm} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | } 
+		\hline
+		r& Contingency matrix & Homogeneity& Completeness& V-Measure& Adjusted Rand-Index& Adjusted Mutual Index \\ 
+		\hline
+		1 & $$ M = \left( \begin{smallmatrix} 2225&1678\\ 1139&2840 \end{smallmatrix} \right) $$ & 0.060& 0.061& 0.061& 0.081& 0.060 \\ 
+		\hline
+		2 & $$ M = \left( \begin{smallmatrix} 3633&270\\ 793&3186 \end{smallmatrix} \right) $$ & 0.446& 0.451& 0.448& 0.533& 0.446 \\ 
+		\hline
+		3 & $$ M = \left( \begin{smallmatrix} 3531&372\\ 640&3339 \end{smallmatrix} \right) $$ & 0.452& 0.453& 0.452& 0.552& 0.452\\
+		\hline
+		5& $$ M = \left( \begin{smallmatrix} 3900&3\\ 2765&1214 \end{smallmatrix} \right) $$ & 0.168& 0.271& 0.208& 0.088& 0.168\\
+		\hline
+		10 & $$ M = \left( \begin{smallmatrix} 3405&498\\ 3976&3 \end{smallmatrix} \right) $$ & 0.064& 0.188& 0.096& 0.018& 0.064\\
+		\hline
+		20 & $$ M = \left( \begin{smallmatrix} 1208&2695\\ 3918&61 \end{smallmatrix} \right) $$ & 0.434& 0.465& 0.449& 0.460& 0.434\\
+		\hline
+		\textbf{50} & $$ M = \left( \begin{smallmatrix} 465&3438\\ 17&3962 \end{smallmatrix} \right) $$ & 0.051& 0.154& 0.077& 0.015& 0.051\\
+		\hline
+		100 & $$ M = \left( \begin{smallmatrix} 3783&120\\ 3904&75 \end{smallmatrix} \right) $$ & 0.001& 0.006& 0.002& 0.000& 0.001\\
+		\hline
+		300 & $$ M = \left( \begin{smallmatrix} 307&3596\\ 3&3976 \end{smallmatrix} \right) $$ & 0.038& 0.159& 0.061& 0.007& 0.038\\
+		\hline
+	\end{tabular}
+\end{center}
+\vspace{5cm}
+
+NMF Truncated Data for various R:\\
+\begin{figure}[h]
+	\centering
+	\subfloat[Homogeneity Score]{{\includegraphics[width=7cm]{3_2.png} }}%
+	\qquad
+	\subfloat[Completeness]{{\includegraphics[width=7cm]{3_3.png} }}%
+	
+	\centering
+	\subfloat[V-Measure score]{{\includegraphics[width=7cm]{3_4.png} }}%
+	\qquad
+	\subfloat[Adjusted Randomised Score index]{{\includegraphics[width=7cm]{3_5.png} }}%
+	
+	\centering
+	\subfloat[Adjusted mutual Score index]{{\includegraphics[width=7cm]{3_6.png} }}%
+\end{figure}
+\vspace{5cm}
+
+\section{Question 4a}
+The plots for Visualization of K-Means clustering:\\
+\begin{figure}[h]
+	\centering
+	\subfloat[Visualization of K-Means clustering for 2 clusters using r = 2 obtained in LSI]{{\includegraphics[width=7cm]{4_1.png} }}%
+	\qquad
+	\subfloat[Visualization of K-Means clustering for 2 clusters using r = 3 obtained in NMF]{{\includegraphics[width=7cm]{4_2.png} }}%
+\end{figure}
+\section{Question 4b}	
+\textbf{Output:\\Normalizing data for r = 2 with LSI}\\
+Contingency Matrix:$$ M = \left( \begin{smallmatrix} 2620&1283\\ 59&3920 \end{smallmatrix} \right) $$ \\
+Homogeneity: 0.416\\
+Completeness: 0.450\\
+V-measure: 0.432\\
+Adjusted Rand-Index: 0.435\\
+Adjusted Mutual-Index: 0.416\\
+
+\textbf{Normalizing data for r = 3 with NMF}\\
+Contingency Matrix:$$ M = \left( \begin{smallmatrix} 954&2949\\ 3862&117 \end{smallmatrix} \right) $$ \\
+Homogeneity: 0.470\\
+Completeness: 0.488\\
+V-measure: 0.479\\
+Adjusted Rand-Index: 0.530\\
+Adjusted Mutual-Index: 0.470\\
+\begin{figure}[h]
+	\centering
+	\subfloat[Normalizing data for r = 2 with LSI]{{\includegraphics[width=7cm]{4_3.png} }}%
+	\qquad
+	\subfloat[Normalizing data for r = 3 with NMF]{{\includegraphics[width=7cm]{4_4.png} }}%
+\end{figure}
+
+\textbf{Log Transformation using r = 3}\\
+Contingency Matrix:$$ M = \left( \begin{smallmatrix} 3213&690\\ 177&3802 \end{smallmatrix} \right) $$ \\
+Homogeneity: 0.520\\
+Completeness: 0.528\\
+V-measure: 0.524\\
+Adjusted Rand-Index: 0.608\\
+Adjusted Mutual-Index: 0.520\\
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=90mm]{4_5.png}
+	\caption{Log Transformation using r = 3}
+\end{figure}
+
+\textbf{Normalizing and then taking log transform of NMF reduced data}\\
+Contingency Matrix:$$ M = \left( \begin{smallmatrix} 988&2915\\ 3870&109 \end{smallmatrix} \right) $$ \\
+Homogeneity: 0.484\\
+Completeness: 0.485\\
+V-measure: 0.485\\
+Adjusted Rand-Index: 0.591\\
+Adjusted Mutual-Index: 0.484\\
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=90mm]{4_6.png}
+	\caption{Normalizing and then taking log transform of NMF reduced data}
+\end{figure}
+
+\textbf{Taking log transform and then normalizing of NMF reduced data}\\
+Contingency Matrix:$$ M = \left( \begin{smallmatrix} 988&2915\\ 3870&109 \end{smallmatrix} \right) $$ \\
+Homogeneity: 0.484\\
+Completeness: 0.485\\
+V-measure: 0.484\\
+Adjusted Rand-Index: 0.590\\
+Adjusted Mutual-Index: 0.484\\
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=90mm]{4_7.png}
+	\caption{Taking log transform and then normalizing of NMF reduced data}
+\end{figure}
+\section{Question 5}
+In this part we want to examine how purely we can retrieve all 20 original sub-class labels with clustering. Therefore, we need to include all the documents and the corresponding terms in the data matrix and proper representation through dimensionality reduction of the TF-IDF representation.
+
+\textbf{Output:\\ For getting TFIDF matrix and printing its dimensions}\\
+Dimensions of Numerical feature vector for training data: (7882, 18469)\\
+Number of terms Extracted for training data: 18469\\
+Dimensions of TF-IDF vector(7882, 18469)\\
+\vspace{5cm}
+
+\textbf{Finding best r value with LSI for 20 clusters}\\
+\begin{center}
+	\begin{tabular}{ | m{3cm}| m{2cm} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | } 
+		\hline
+		r & Homogeneity& Completeness& V-Measure& Adjusted Rand-Index& Adjusted Mutual Index \\ 
+		\hline
+		1 & 0.086& 0.021& 0.034& 0.010& 0.021 \\ 
+		\hline
+		2 & 0.615& 0.149& 0.240& 0.076& 0.148 \\ 
+		\hline
+		3 & 0.582& 0.145& 0.232& 0.080& 0.145\\
+		\hline
+		4 & 0.589& 0.147& 0.235& 0.074& 0.146\\
+		\hline
+		5 & 0.601& 0.152& 0.243& 0.078& 0.152\\
+		\hline
+		6 & 0.568& 0.146& 0.232& 0.075& 0.146\\
+		\hline
+		7 & 0.547& 0.144& 0.228& 0.072& 0.143\\
+		\hline
+		8 & 0.609& 0.158& 0.250& 0.084& 0.157\\
+		\hline
+		9 & 0.600& 0.159& 0.251& 0.090& 0.158\\
+		\hline
+		10 & 0.584& 0.155& 0.245& 0.087& 0.155\\
+		\hline
+	\end{tabular}
+\end{center}
+Contingency Matrix : \\
+For r=1\\ 
+$[[263\quad  85\quad 101\quad 280\quad 241\quad 330\quad 141\quad 203\quad 185\quad 322\quad  37\quad 305\quad  74\quad 155\quad 138\quad 286\quad 274\quad 222\quad 257\quad 4]\\$
+$[309\quad  18\quad 300\quad 106\quad 380\quad 241\quad 221\quad  51\quad 365\quad 224\quad   3\quad 271\quad 178\quad  26\quad 334\quad 158\quad 347\quad 375\quad 72\quad   0]]\\$
+For r=2\\
+$[[ 93\quad 236\quad 135\quad   1\quad 411\quad 133 \quad  0\quad  61 \quad 11 \quad  3\quad 449 \quad 18\quad 480 \quad  0\quad 185 \quad522\quad 158\quad 232\quad 465 \quad310]\\$
+$[666 \quad  0 \quad191 \quad396 \quad 87\quad 561\quad 288 \quad  0 \quad465\quad 487\quad 137 \quad160\quad   5 \quad131\quad   0 \quad 12\quad   3 \quad374 \quad16 \quad 0]]\\$
+For r=3\\
+$[[456\quad  48\quad 125\quad 298 \quad288 \quad110 \quad 41\quad 290 \quad  1 \quad160\quad 348\quad 580 \quad382\quad  39\quad 147\quad   0\quad 232\quad 260\quad 97\quad   1]\\$
+$[ 12\quad 465\quad 850\quad  59\quad   4  \quad 1 \quad 86 \quad408\quad 589 \quad  0 \quad  0\quad 122 \quad 69  \quad 0\quad 657\quad 179 \quad  9 \quad  0\quad0 \quad469]]\\$
+For r=4\\
+$[[231\quad 182\quad 244\quad   0\quad 490\quad 286 \quad 83\quad 254\quad  54\quad 435 \quad  3  \quad 1\quad 42\quad119\quad286\quad   4\quad588\quad 195\quad 400\quad   6]\\$
+$[ 17\quad662 \quad  0\quad 161\quad  25 \quad 10\quad 506\quad 648 \quad  0\quad  24\quad 218 \quad369 \quad  0 \quad  1\quad 415\quad 251 \quad 48 \quad  0\quad 0\quad 624]]\\$
+For r=5\\
+$[[ 46 \quad  4 \quad359 \quad 10\quad 699 \quad154 \quad 90\quad 394 \quad  1 \quad231\quad  92\quad 214\quad 371 \quad  0\quad 428 \quad 81\quad 204\quad 248\quad 0 \quad277]\\$
+$[604\quad 303\quad   8 \quad639\quad 92 \quad  0 \quad  1\quad  14\quad 353\quad 863\quad   0 \quad  0\quad  67\quad 194\quad 650 \quad  0 \quad 17 \quad  0\quad 173\quad   1]]\\$
+For r=6\\
+$[[361\quad 500\quad 167 \quad 87 \quad519 \quad151  \quad 1  \quad 1 \quad 11 \quad197 \quad197  \quad 1\quad 200\quad 202\quad 168 \quad 55\quad 281\quad 147 \quad547\quad110]\\$
+$[  3 \quad788  \quad 0  \quad 0\quad   5 \quad  3\quad 283\quad 402 \quad666 \quad  0  \quad 0\quad 496\quad 160 \quad946 \quad 0 \quad  0 \quad 49\quad  29\quad 149 \quad  0]]\\$
+For r=7\\
+$[[319\quad  24\quad 370\quad 220\quad  88 \quad  1 \quad  4  \quad 2\quad  79\quad 569 \quad610\quad 194\quad 253\quad 455\quad 122\quad  10\quad 261 \quad 90\quad 145\quad  87]\\$
+$[  3 \quad453\quad 206 \quad 17\quad   0\quad 258\quad  81\quad 445 \quad  0\quad   5\quad 839 \quad  0\quad  49 \quad 10  \quad 0 \quad650\quad 962\quad   1\quad 0 \quad  0]]\\$
+For r=8\\
+$[[ 615  \quad  6 \quad 151\quad  220\quad   33 \quad 244 \quad 255\quad  155\quad  121\quad    1  \quad  3 \quad 402\quad  200\quad  529\quad 196\quad  143 \quad 123 \quad 349 \quad 153 \quad   4]\\$
+$[  16\quad  645  \quad  0  \quad  0 \quad   0\quad    0\quad  208\quad 1021 \quad   0 \quad 272\quad  428\quad   10 \quad  15\quad  936\quad 0 \quad  53\quad    0 \quad   3   \quad 2  \quad370]]\\$
+For r=9\\
+$[[ 268\quad  512  \quad  3 \quad 316\quad  257\quad  202\quad  161 \quad  87\quad  626 \quad 156 \quad257  \quad  1 \quad  71 \quad 155\quad 153 \quad   1  \quad  4 \quad  19\quad  261\quad  393]\\$
+$[ 192\quad 1131 \quad 795 \quad   2 \quad   0 \quad  16\quad 923 \quad   0\quad   22 \quad   0 \quad   0 \quad 423\quad    1\quad    0\quad 58 \quad 312 \quad  93\quad    0 \quad   8  \quad  3]]\\$
+For r=10\\
+$[[ 364 \quad 135\quad  273\quad    4\quad  199 \quad192 \quad  31\quad  595  \quad  1\quad  413 \quad 303 \quad   1 \quad 107\quad    2 \quad126\quad  172\quad  136\quad  130 \quad 169 \quad 550]\\$
+$[ 179 \quad 813\quad    3 \quad 94 \quad   3\quad   15 \quad   0\quad   36\quad  338 \quad   9 \quad   0\quad 399  \quad  0\quad 790\quad 0  \quad  0  \quad  0  \quad  0\quad   52 \quad1248]]\\$
+
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Homogeneity Score]{{\includegraphics[width=7cm]{5_1.png} }}%
+	\qquad
+	\subfloat[Completeness]{{\includegraphics[width=7cm]{5_2.png} }}%
+	
+	\centering
+	\subfloat[V-Measure score]{{\includegraphics[width=7cm]{5_3.png} }}%
+	\qquad
+	\subfloat[Adjusted Randomised Score index]{{\includegraphics[width=7cm]{5_4.png} }}%
+	
+	\centering
+	\subfloat[Adjusted mutual Score index ]{{\includegraphics[width=7cm]{5_5.png} }}%
+\end{figure}
+\vspace{4cm}
+
+\textbf{Finding best r value with NMF for 20 clusters}\\
+\begin{center}
+	\begin{tabular}{ | m{3cm}| m{2cm} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | } 
+		\hline
+		r & Homogeneity& Completeness& V-Measure& Adjusted Rand-Index& Adjusted Mutual Index \\ 
+		\hline
+		1 & 0.086& 0.022& 0.034& 0.011& 0.021 \\ 
+		\hline
+		2 & 0.635& 0.154& 0.248& 0.086& 0.154 \\ 
+		\hline
+		3 & 0.599& 0.155& 0.246& 0.106& 0.155\\
+		\hline
+		4 & 0.558& 0.141& 0.225& 0.080& 0.140\\
+		\hline
+		5 & 0.560& 0.142& 0.227& 0.077& 0.142\\
+		\hline
+		6 & 0.540& 0.142& 0.225& 0.081& 0.142\\
+		\hline
+		7 & 0.546& 0.152& 0.237& 0.089& 0.151\\
+		\hline
+		8 & 0.519& 0.137& 0.217& 0.068& 0.137\\
+		\hline
+		9 & 0.541& 0.144& 0.227& 0.077& 0.144\\
+		\hline
+		10 & 0.534& 0.140& 0.221& 0.067& 0.139\\
+		\hline
+	\end{tabular}
+\end{center}
+Contingency Matrix : \\
+For r=1\\
+$[[319 351 141  37 141 295 157 322 232  74  20 187 230 251 299 329   4 331 101  82]\\$
+$[405 222 221   6 342  81  30 290 386 178   2 380  58 384 139 318   0 224 300  13]]\\$
+For r=2\\
+$[[278  10 314   0 577   1 516  87  60 231 101 311 341   4  27  92 161 291 0 501]\\$
+$[177 618   0 151  29 468   6 668 134 355 250   8  70 294 672   0   1  34 42   2]]\\$
+For r=3\\
+$[[ 273   88  372   40   69   18    6   40  146  595  282  189   92  543 0  466  151   41  283  209]\\$
+$[ 239    1  544    0  146  959  560    0    5   85   15    0 1098   13 191    4   16   82   21    0]]\\$
+For r=4\\
+$[[181 146  20 190 238  61 223   0 363 504 169 266   0  57 359  63 210   9 195 649]\\$
+$[218   4 704   0  10 796 778 105 415  49   1   1 272   0  11   0   0 461 33 121]]\\$
+For r=5\\
+$[[240  17  99 524  43 406 401   0 182 191  94 221 196   0  28   1 132 165 589 374]\\$
+$[ 73 530   0  48   0   5 709 135 933   4   1   0   0 501 454 355  42  12 155  22]]\\$
+For r=6\\
+$[[467 473   6  60  78 347 211 221  34 417 215  76 152 150 402 196   0 208 154  36]\\$
+$[224 902 856   1   0   3   0  28 472  87  24   0   0   0  13 952 409   0 3   5]]\\$
+For r=7\\
+$[[   6  140  138  183   86    0  103  452   56  228  256  696  150  169 339   25  407   63  135  271]\\$
+$[ 860    2    0   32    0  420  961   13    1    0    5 1381    0   55 230    0   16    1    2    0]]\\$
+For r=8\\
+$[[ 23 729 130   0 211 245  90  31 206 156 127 494 125   1 458  13 259 412 51 142]\\$
+$[457 788  14 542   0   5   0   0  59   0   0   3   0 231  11 684 924 213 1  47]]\\$
+For r=9\\
+$[[236 255  89   4 499 102 141   6  24 393 203  24 218   1 245 612 135 453 159 104]\\$
+$[982   0   0 810   7   4   0  86   0 212  31 491   0 381   5 905   0  11 54   0]]\\$
+For r=10\\
+$[[ 667  270  389    0    0   12  267  396  132   92    0  170    1  143 132  246  556  160  262   8]\\$
+$[1147    4    3   43  351   71    0  184    0    1  442   55  200  735 0   17   17  124    3  582]]\\$
+
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Homogeneity Score]{{\includegraphics[width=7cm]{5_6.png} }}%
+	\qquad
+	\subfloat[Completeness]{{\includegraphics[width=7cm]{5_7.png} }}%
+	
+	\centering
+	\subfloat[V-Measure score]{{\includegraphics[width=7cm]{5_8.png} }}%
+	\qquad
+	\subfloat[Adjusted Randomised Score index]{{\includegraphics[width=7cm]{5_9.png} }}%
+	
+	\centering
+	\subfloat[Adjusted mutual Score index ]{{\includegraphics[width=7cm]{5_10.png} }}%
+\end{figure}
+
+\textbf{Visualization of K-Means clustering for 20 clusters}\\
+\begin{figure}[h]
+	\centering
+	\subfloat[Visualization of K-Means clustering for 20 clusters using r = 9 obtained in LSI]{{\includegraphics[width=7cm]{v11.png} }}%
+	\qquad
+	\subfloat[ Visualization of K-Means clustering for 20 clusters using r = 3 obtained in NMF]{{\includegraphics[width=7cm]{v12.png} }}%
+\end{figure}
+
+\textbf{Normalizing data}\\
+Normalizing data for r = 9 with LSI\\
+Contingency Matrix:\\
+$[[ 616 \quad 333 \quad 545 \quad 175 \quad   3  \quad 95 \quad 160  \quad  1 \quad  31 \quad   1 \quad 434 \quad 116 \quad 174 \quad 130\quad 374\quad   14 \quad 246 \quad 307 \quad   1 \quad 147]\\$
+$[  20\quad    2\quad 1122 \quad  18\quad  722 \quad   2 \quad 930 \quad 314 \quad   0  \quad407 \quad   6 \quad   0  \quad 53\quad    0 \quad154 \quad 174 \quad   0\quad    0\quad   55 \quad   0]]\\$
+Homogeneity: 0.590\\
+Completeness: 0.156\\
+V-measure: 0.247\\
+Adjusted Rand-Index: 0.086\\
+Adjusted Mutual-Index: 0.156\\
+
+Normalizing data for r = 3 with NMF\\
+Contingency Matrix:\\
+$[[327 \quad 39\quad  88\quad 499 \quad  6 \quad290 \quad 32\quad 554\quad   0 \quad 40\quad 154 \quad290\quad 141 \quad230 \quad182 \quad 16 189\quad 582 201  43]\\$
+$[425 \quad 91 \quad  1\quad   4 \quad413 \quad 13 \quad867 \quad 14 \quad152\quad   0\quad  14\quad  19\quad   7 \quad187\quad 900\quad 766 \quad  0 \quad106\quad0 \quad  0]]\\$
+Homogeneity: 0.595\\
+Completeness: 0.153\\
+V-measure: 0.243\\
+Adjusted Rand-Index: 0.097\\
+Adjusted Mutual-Index: 0.152\\
+\begin{figure}[h]
+	\centering
+	\subfloat[Normalizing data for r = 9 with LSI]{{\includegraphics[width=7cm]{n1.png} }}%
+	\qquad
+	\subfloat[ Normalizing data for r = 3 with NMF]{{\includegraphics[width=7cm]{n2.png} }}%
+\end{figure}
+
+\textbf{Log Transformation}\\
+Contingency Matrix:\\
+$[[ 32\quad 504 \quad  2\quad 462\quad 190\quad 277 \quad209\quad314\quad 105\quad  88 \quad  1\quad 443\quad 228\quad 147\quad  28\quad 228\quad 172\quad  33\quad 153 \quad287]\\$
+$[158\quad   3\quad 840\quad  35  \quad 0 \quad 33\quad 276\quad   0\quad 299 \quad343 \quad554 \quad 18  \quad16 \quad 12\quad 793 \quad  0\quad 215\quad 307\quad 11 \quad 66]]\\$
+Homogeneity: 0.630\\
+Completeness: 0.151\\
+V-measure: 0.244\\
+Adjusted Rand-Index: 0.089\\
+Adjusted Mutual-Index: 0.151\\
+\begin{figure}[h]
+	\centering
+	\subfloat[Log Transformation]{{\includegraphics[width=7cm]{l1.png} }}%
+	\qquad
+\end{figure}
+
+\textbf{Normalizing and then taking log transform of NMF reduced data}\\
+Contingency Matrix:\\
+$[[  8 \quad621  94\quad 211\quad  28\quad  34\quad 168\quad 344 \quad193\quad 321\quad 327\quad 124\quad 41\quad 613\quad  13\quad 143 \quad 64  \quad 0 \quad62\quad 494]\\$
+$[457 \quad 17\quad   3 \quad841\quad 832 \quad  0 \quad  0\quad  99 \quad  0  \quad 9\quad 411 \quad  4 \quad 94\quad  92 \quad  0\quad  16\quad 931\quad 168\quad 1 \quad  4]]\\$
+Homogeneity: 0.635\\
+Completeness: 0.167\\
+V-measure: 0.265\\
+Adjusted Rand-Index: 0.182\\
+Adjusted Mutual-Index: 0.167\\
+
+\textbf{Taking log transform and then normalizing of NMF reduced data}\\
+Contingency Matrix:\\
+$[[  8 \quad621\quad  94 \quad211\quad  28\quad  34\quad 168\quad 344\quad 193\quad 321\quad 327\quad 124\quad  41\quad 613 \quad 13 \quad143 \quad 64 \quad  0 \quad62 \quad494]\\$
+$[457 \quad 17 \quad  3 \quad841 \quad832 \quad  0 \quad  0 \quad 99 \quad  0 \quad  9\quad 411  \quad 4  \quad94 \quad 92\quad   0 \quad 16 \quad931\quad168\quad 1 \quad  4]]\\$
+Homogeneity: 0.628\\
+Completeness: 0.169\\
+V-measure: 0.266\\
+Adjusted Rand-Index: 0.197\\
+Adjusted Mutual-Index: 0.168\\
+\begin{figure}[h]
+	\centering
+	\subfloat[Normalizing and then taking log transform of NMF reduced data for r = 3]{{\includegraphics[width=7cm]{lt1.png} }}%
+	\qquad
+	\subfloat[Taking log transform and then normalizing of NMF reduced data r=3]{{\includegraphics[width=7cm]{lt2.png} }}%
+\end{figure}
+
+
+\end{document}
